@@ -1,4 +1,4 @@
-const {client, createUser, updateUser, getAllUsers, getUserById, createPost, updatePost, getAllPosts, getPostsByUser, createTags, addTagsToPost } = require('./index');
+const {client, createUser, updateUser, getAllUsers, getUserById, createPost, updatePost, getAllPosts, getPostsByUser, createTags, addTagsToPost, getPostById } = require('./index');
   
   async function dropTables() {
     try {
@@ -42,8 +42,7 @@ const {client, createUser, updateUser, getAllUsers, getUserById, createPost, upd
         CREATE TABLE post_tags (
             "postId" INTEGER REFERENCES posts(id),
             "tagId" INTEGER REFERENCES tags(id),
-            UNIQUE("postId"),
-            UNIQUE("tagId")
+            UNIQUE("postId", "tagId")           
         )
       `);  
       console.log("Finished building tables!");

@@ -81,7 +81,8 @@ async function createPost({
       VALUES($1, $2, $3)
       RETURNING *;
     `, [authorId, title, content]);    
-    const tagList = await createTags(tags);    
+    const tagList = await createTags(tags);
+    console.log(tagList)    
     return await addTagsToPost(post.id, tagList);
   } catch (error) {
     console.log("createPost error")
@@ -163,6 +164,7 @@ async function createTags(tagList) {
       (_, index) => `$${index + 1}`).join('), (');    
     const selectValues = tagList.map(
       (_, index) => `$${index + 1}`).join(', ');
+
       try {
         const { tags } = await client.query(`
           INSERT INTO tags(name)
@@ -170,13 +172,14 @@ async function createTags(tagList) {
           ON CONFLICT (name) DO NOTHING;
           `, tagList)
          console.log(insertValues) 
-        const { tag } = await client.query(`
+
+        const { rows } = await client.query(`
           SELECT * FROM tags
           WHERE name
           IN (${ selectValues });
           `, tagList);
         console.log(selectValues)        
-      return tag    
+      return rows    
     } catch (error) {
       throw error;
     }    
@@ -244,5 +247,6 @@ module.exports = {
   getAllPosts,
   getPostsByUser,
   createTags,
-  addTagsToPost
+  addTagsToPost,
+  getPostById
 }
