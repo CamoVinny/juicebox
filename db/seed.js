@@ -15,8 +15,7 @@ const {
 async function dropTables() {
   try {
     console.log("Starting to drop tables...");
-
-    // have to make sure to drop in correct order
+    
     await client.query(`
       DROP TABLE IF EXISTS post_tags;
       DROP TABLE IF EXISTS tags;
@@ -137,7 +136,6 @@ async function createInitialPosts() {
 async function rebuildDB() {
   try {
     client.connect();
-
     await dropTables();
     await createTables();
     await createInitialUsers();
@@ -198,7 +196,6 @@ async function testDB() {
     throw error;
   }
 }
-
 
 rebuildDB()
   .then(testDB)
